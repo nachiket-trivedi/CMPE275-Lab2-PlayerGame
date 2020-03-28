@@ -14,12 +14,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 
 import java.util.List;
 
 @Entity
-@Table(name = "Sponsors")
+@Table(name = "sponsor")
 public class Sponsor {
 	
 		@Id
@@ -31,9 +32,13 @@ public class Sponsor {
 		private String description;
 		@Embedded
 	    private Address address;
-		@OneToMany
-	    private List<Player> beneficiaries;
-	    
+		@OneToMany(fetch = FetchType.EAGER,mappedBy = "sponsor")
+		@JsonIgnoreProperties({"sponsor"})
+		private List<Player> beneficiaries;
+		
+		
+		
+		
 	    public Sponsor() {
 	    	
 	    }

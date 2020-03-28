@@ -12,10 +12,11 @@ import com.cmpe275_lab2.lab2.repository.SponsorRepository;
 @SpringBootApplication
 public class Lab2Application implements CommandLineRunner{
 
-	@Autowired
+	/*@Autowired
 	private PlayerRepository playerRepository;
 	@Autowired
 	private SponsorRepository sponsorRepository;
+	*/
 	public static void main (String[] args) {
 		SpringApplication.run(Lab2Application.class, args);
 	}

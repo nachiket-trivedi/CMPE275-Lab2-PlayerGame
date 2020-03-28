@@ -16,13 +16,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 
 import java.util.List;
 
 
 @Entity
-@Table(name = "Players")
+@Table(name = "player")
 public class Player {
 	
 	    @Id
@@ -39,10 +40,12 @@ public class Player {
 	    private String description;
 	    @Embedded
 	    private Address address;
-	    @ManyToOne
+	    @ManyToOne(fetch=FetchType.EAGER,optional=true)
+	    @JsonIgnoreProperties({"beneficiaries"})
+	    @JoinColumn(name="sponsor_id", nullable=true)
 	    private Sponsor sponsor;
 	    @ManyToMany(cascade={CascadeType.ALL}, fetch = FetchType.LAZY)
-	    @JoinTable(name="Opponents",
+	    @JoinTable(name="opponent",
 		joinColumns={@JoinColumn(name="Player", referencedColumnName="PL_ID")},
 		inverseJoinColumns={@JoinColumn(name="Opponent", referencedColumnName="PL_ID")})
 	    private List<Player> opponents;
@@ -51,18 +54,17 @@ public class Player {
 	    	
 	    }
 		
-		public Player(long id, String firstname, String lastname, String email, String description, Address address,
-				Sponsor sponsor, List<Player> opponents) {
+		public Player(String firstname, String lastname, String email, String description, Address address,
+				Sponsor sponsor) {
 			
 			super();
-			this.id = id;
 			this.firstname = firstname;
 			this.lastname = lastname;
 			this.email = email;
 			this.description = description;
 			this.address = address;
 			this.sponsor = sponsor;
-			this.opponents = opponents;
+			//this.opponents = opponents;
 		}
 		
 		

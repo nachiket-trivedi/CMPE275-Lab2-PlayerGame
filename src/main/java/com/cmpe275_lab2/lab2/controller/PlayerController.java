@@ -1,5 +1,8 @@
 package com.cmpe275_lab2.lab2.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cmpe275_lab2.lab2.model.Address;
 import com.cmpe275_lab2.lab2.model.Player;
 import com.cmpe275_lab2.lab2.model.Sponsor;
+import com.cmpe275_lab2.lab2.repository.PlayerRepository;
 import com.cmpe275_lab2.lab2.serviceImpl.PlayerServiceImpl;
 import com.cmpe275_lab2.lab2.serviceImpl.SponsorServiceImpl;
 
@@ -24,6 +28,9 @@ public class PlayerController {
 	
 	@Autowired
 	private SponsorServiceImpl sponsorServiceImpl;
+	
+	@Autowired
+	private PlayerRepository playerRepository;
 
 	
 	
@@ -40,23 +47,52 @@ public class PlayerController {
             , @RequestParam(required = false) String zip
             , @RequestParam(required = false) Long sponsor_id
             ) {
-		Player player = new Player();
-		player.setFirstname(firstname);
-		player.setLastname(lastname);
-		player.setEmail(email);
-		player.setDescription(description);
-		player.setAddress(new Address(street, city, state, zip));
-		if(sponsor_id!=null) {
-			Sponsor tempSponsor = sponsorServiceImpl.getSponsor(sponsor_id);
-			if (tempSponsor != null) {
-				player.setSponsor(tempSponsor);
-			}
-			else {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-			}
-		}
 		
-		playerServiceImpl.addPlayer(player);
-		return ResponseEntity.ok(player);
+		//String new_description=description.trim();
+		List<Player> ex_player = playerRepository.findByEmail(email.trim());
+		if(ex_player.size() > 0){
+			 return new ResponseEntity(HttpStatus.CONFLICT);
+		}
+		else {
+			Player player = new Player();
+			player.setFirstname(firstname.trim());
+			player.setLastname(lastname.trim());
+			player.setEmail(email.trim());
+			if(description!=null) {
+				String new_description=description.trim();
+				player.setDescription(new_description);
+			}
+			Address add=new Address();
+			if(street!=null) {
+				add.setStreet(street.trim());
+			}
+			if(city!=null) {
+				add.setCity(city.trim());
+			}
+			if(state!=null) {
+				add.setState(state.trim());
+			}
+			if(zip!=null) {
+				add.setZip(zip.trim());
+			}
+			player.setAddress(add);
+		
+		
+	if(sponsor_id!=null) {
+		Optional<Sponsor> tempSponsor = sponsorServiceImpl.getSponsor(sponsor_id);
+		if (tempSponsor != null) {
+			player.setSponsor(tempSponsor);
+		}
+		else {
+			
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+	}
+	
+	playerServiceImpl.addPlayer(player);
+	
+	
+	return ResponseEntity.ok(player);
+		}
 	}
 }

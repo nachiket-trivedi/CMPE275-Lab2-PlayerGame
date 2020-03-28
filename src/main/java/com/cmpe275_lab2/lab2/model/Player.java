@@ -116,8 +116,10 @@ public class Player {
 		public List<Player> getOpponents() {
 			return opponents;
 		}
-		public void setOpponents(List<Player> opponents) {
-			this.opponents = opponents;
+		public void setOpponents(Player opponents) {
+			if(this.opponents.contains(opponents))
+				return;
+			this.opponents.add(opponents);
 		}
 	    
 

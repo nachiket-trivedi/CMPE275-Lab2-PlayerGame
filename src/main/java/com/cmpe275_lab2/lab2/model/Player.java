@@ -1,25 +1,39 @@
 package com.cmpe275_lab2.lab2.model;
 
-import java.util.List;
 
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.sun.istack.NotNull;
+
+import java.util.List;
 
 
 @Entity
+@Table(name = "Players")
 public class Player {
 	
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.AUTO)
+	    @Column(name="PL_ID")
 	    private long id;  // primary key
+	    @NotNull
 	    private String firstname;
+	    @NotNull
 	    private String lastname;
+	    @NotNull
 	    @Column(unique=true)
 	    private String email;
 	    private String description;
@@ -27,7 +41,10 @@ public class Player {
 	    private Address address;
 	    @ManyToOne
 	    private Sponsor sponsor;
-	    @ManyToMany
+	    @ManyToMany(cascade={CascadeType.ALL}, fetch = FetchType.LAZY)
+	    @JoinTable(name="Opponents",
+		joinColumns={@JoinColumn(name="Player", referencedColumnName="PL_ID")},
+		inverseJoinColumns={@JoinColumn(name="Opponent", referencedColumnName="PL_ID")})
 	    private List<Player> opponents;
 	    
 	    public Player() {

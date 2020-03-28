@@ -1,25 +1,37 @@
 package com.cmpe275_lab2.lab2.model;
 
-import java.util.List;
 
+
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.sun.istack.NotNull;
+
+import java.util.List;
 
 @Entity
+@Table(name = "Sponsors")
 public class Sponsor {
 	
 		@Id
 		@GeneratedValue(strategy = GenerationType.AUTO)
 		private long id;
+		@NotNull
 		@Column(unique=true)
 	 	private String name;  // primary key, >= two characters after trimming white spaces
 		private String description;
 		@Embedded
 	    private Address address;
+		@OneToMany
 	    private List<Player> beneficiaries;
 	    
 	    public Sponsor() {

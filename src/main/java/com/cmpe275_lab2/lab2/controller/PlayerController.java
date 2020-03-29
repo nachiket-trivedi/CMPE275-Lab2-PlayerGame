@@ -88,7 +88,7 @@ public class PlayerController {
 	}
 	
 	playerServiceImpl.addPlayer(player);
-	
+
 	
 	return ResponseEntity.ok(player);
 		}
@@ -96,14 +96,14 @@ public class PlayerController {
 
 
 	@DeleteMapping("/player/{id}")
-	public ResponseEntity<?> addPlayer(@PathVariable(value = "id") Long id) {
+	public ResponseEntity<?> deletePlayer(@PathVariable(value = "id") Long id) {
 		Optional<Player> playersList = playerRepository.findById(id);
 
-		if (playersList == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		if (playersList.isPresent()) {
+			playerServiceImpl.deletePlayer(id);
+            return ResponseEntity.ok().build();
 		} else {
-			playerRepository.delete(id);
-			return ResponseEntity.ok().build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
 

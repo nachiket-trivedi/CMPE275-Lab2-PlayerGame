@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -95,5 +96,21 @@ public class PlayerController {
 	
 	return ResponseEntity.ok(player);
 		}
+	}
+	
+	@RequestMapping(value = "/player/{id}", produces = { "application/json", "application/xml"})
+	public ResponseEntity<Object> getPlayer(@PathVariable Long id){
+		
+			
+			Optional<Player> player = playerServiceImpl.getPlayer(id);
+		
+			if(player.isPresent()) {
+				
+				return ResponseEntity.ok(player);
+			}
+			else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}			
+		
 	}
 }

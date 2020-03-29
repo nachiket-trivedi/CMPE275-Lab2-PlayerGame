@@ -1,18 +1,21 @@
 package com.cmpe275_lab2.lab2.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cmpe275_lab2.lab2.model.Address;
+import com.cmpe275_lab2.lab2.model.Player;
 import com.cmpe275_lab2.lab2.model.Sponsor;
 import com.cmpe275_lab2.lab2.repository.SponsorRepository;
 import com.cmpe275_lab2.lab2.serviceImpl.SponsorServiceImpl;
@@ -62,6 +65,21 @@ public class SponsorController {
 		sponsorServiceImpl.addSponsor(sponsor);
 		return ResponseEntity.ok(sponsor);
 		}
+	}
+	
+	@RequestMapping(value = "/sponsor/{name}", produces = { "application/json", "application/xml"})
+	public ResponseEntity<Object> getSponsor(@PathVariable String name){
+			
+			Optional<Sponsor> sponsor = sponsorServiceImpl.getSponsor(name);
+			
+			if(sponsor.isPresent()) {
+				
+				return ResponseEntity.ok(sponsor);
+			}
+			else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}			
+		
 	}
 
 }

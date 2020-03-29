@@ -19,9 +19,15 @@ public class SponsorServiceImpl implements SponsorService {
 		return sponsorRepository.findById(id);
 	}
     
+    public Optional<Sponsor> getSponsor(String name){
+    	return sponsorRepository.findOneByName(name);
+    }
     public void addSponsor(Sponsor sponsor) {
     	sponsorRepository.save(sponsor);
 	}
+
+    
+	
     
     
 }

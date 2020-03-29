@@ -31,5 +31,24 @@ public class PlayerServiceImpl implements PlayerService {
     	playerRepository.save(player2);
 		
 	}
+
+	public boolean updatePlayer(Player player, long id)
+	{
+	Optional<Player> p = playerRepository.findById(id);
+	p.ifPresent(player1 -> {
+		player1.setFirstname(player.getFirstname());
+		player1.setLastname(player.getLastname());
+		player1.setDescription(player.getDescription());
+		player1.setEmail(player.getEmail());
+		player1.setAddress(player.getAddress());
+		player1.setSponsor(player.getSponsor());
+	});
+	if(p.isPresent()){
+		playerRepository.save(p.get());
+		return true;
+	}
+	return false;
+	}
+
     
 }

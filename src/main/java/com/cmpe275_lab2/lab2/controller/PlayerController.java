@@ -112,7 +112,7 @@ public class PlayerController {
 			else {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}			
-		
+	}
 
 	@PutMapping(value="/player/{id}")
 	ResponseEntity<Object> updatePlayer(@PathVariable(name = "id") long id,@RequestParam String firstname

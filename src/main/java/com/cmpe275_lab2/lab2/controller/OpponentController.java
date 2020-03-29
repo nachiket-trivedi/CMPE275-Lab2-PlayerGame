@@ -27,7 +27,7 @@ public class OpponentController {
 	private PlayerRepository playerRepository;
 	
 	@Transactional
-	@RequestMapping(method=RequestMethod.PUT, value="/opponent/{id1}/{id2}", produces = { "application/json", "application/xml" })
+	@RequestMapping(method=RequestMethod.PUT, value="/opponents/{id1}/{id2}", produces = { "application/json", "application/xml" })
 	public ResponseEntity<Object> addOpponent(@PathVariable Long id1, @PathVariable Long id2)
             {
 		
@@ -51,9 +51,7 @@ public class OpponentController {
 			}
 			else {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-			}
-				
-			
+			}	
 		}
 		catch(Exception e) {
 			if (e.getClass().equals(new org.springframework.dao.EmptyResultDataAccessException(0).getClass())) {

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 
 import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "player")
@@ -48,6 +48,7 @@ public class Player {
 	    @JoinTable(name="opponent",
 		joinColumns={@JoinColumn(name="Player", referencedColumnName="PL_ID")},
 		inverseJoinColumns={@JoinColumn(name="Opponent", referencedColumnName="PL_ID")})
+	    @JsonIgnoreProperties( value = {"address","sponsor","opponents"})
 	    private List<Player> opponents;
 	    
 	    public Player() {

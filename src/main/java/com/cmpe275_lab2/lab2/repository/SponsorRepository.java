@@ -15,4 +15,6 @@ public interface SponsorRepository extends CrudRepository<Sponsor, Long>{
 	Optional<Sponsor> findById(Long id);
 	Optional<Sponsor> findOneByName(String name);
 	
+
+	void delete(Sponsor s);
 }

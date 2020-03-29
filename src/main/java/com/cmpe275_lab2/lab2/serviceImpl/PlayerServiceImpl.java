@@ -50,5 +50,8 @@ public class PlayerServiceImpl implements PlayerService {
 	return false;
 	}
 
-    
+
+	public void deletePlayer(Long id) {
+		playerRepository.deleteById(id);
+	}
 }

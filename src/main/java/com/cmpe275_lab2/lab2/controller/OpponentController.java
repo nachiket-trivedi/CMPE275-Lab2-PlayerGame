@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cmpe275_lab2.lab2.model.Player;
+import com.cmpe275_lab2.lab2.model.Sponsor;
 import com.cmpe275_lab2.lab2.repository.PlayerRepository;
 import com.cmpe275_lab2.lab2.serviceImpl.PlayerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,13 +32,28 @@ public class OpponentController {
             {
 		
 		try {
-			Player player1 = playerServiceImpl.getPlayer(id1);
-			Player player2 = playerServiceImpl.getPlayer(id2);
-			if(player1 == null || player2 == null)
+			Optional<Player> player1 = playerServiceImpl.getPlayer(id1);
+			Optional<Player> player2 = playerServiceImpl.getPlayer(id2);
+			if (player1.isPresent() &&  player2.isPresent()){
+				Player p1=player1.get();
+				Player p2=player2.get();
+				id1=p1.getId();
+				id2=p2.getId();
+				if(id1==id2) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+				}
+				else {
+					p1.setOpponents(p2);
+					p2.setOpponents(p1);
+					playerServiceImpl.addOpponents(p1, p2);
+				}
+				
+			}
+			else {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-			player1.setOpponents(player2);
-			player2.setOpponents(player1);
-			playerServiceImpl.addOpponents(player1, player2);
+			}
+				
+			
 		}
 		catch(Exception e) {
 			if (e.getClass().equals(new org.springframework.dao.EmptyResultDataAccessException(0).getClass())) {

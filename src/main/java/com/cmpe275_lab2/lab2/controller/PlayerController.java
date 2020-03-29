@@ -80,8 +80,9 @@ public class PlayerController {
 		
 	if(sponsor_id!=null) {
 		Optional<Sponsor> tempSponsor = sponsorServiceImpl.getSponsor(sponsor_id);
-		if (tempSponsor != null) {
-			player.setSponsor(tempSponsor);
+		if (tempSponsor.isPresent()) {
+			Sponsor s=tempSponsor.get();
+			player.setSponsor(s);
 		}
 		else {
 			

@@ -14,4 +14,5 @@ public interface PlayerRepository extends CrudRepository<Player, Long>{
 	List<Player> findByEmail(String email);
 	public Optional<Player> findById(Long id);
 
+	void delete(Long id);
 }

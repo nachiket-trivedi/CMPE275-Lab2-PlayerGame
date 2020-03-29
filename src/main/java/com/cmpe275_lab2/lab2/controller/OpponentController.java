@@ -1,5 +1,6 @@
 package com.cmpe275_lab2.lab2.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -7,11 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cmpe275_lab2.lab2.model.Player;
 import com.cmpe275_lab2.lab2.model.Sponsor;
@@ -65,6 +62,22 @@ public class OpponentController {
 			
 		}
 		return ResponseEntity.ok().body(new ObjectMapper().createObjectNode().put("msg", "Collaboration added"));
+	}
+
+	@DeleteMapping("/opponent/{id1}/{id2}")
+	public ResponseEntity<?> deleteSponsor(@PathVariable(value = "id1") Long id1, @PathVariable(value = "id2") Long id2) {
+//		List<Sponsor> ex_sponsors = sponsorRepository.findByName(name.trim());
+//
+//		if(name.equals("") || name.equals(null)){
+//			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+//		}
+//		if(ex_sponsors.size() == 0){
+//			return new ResponseEntity(HttpStatus.NOT_FOUND);
+//		}
+//		else {
+//			sponsorRepository.delete(name);
+			return ResponseEntity.ok().build();
+		//}
 	}
 
 }

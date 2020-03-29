@@ -8,10 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cmpe275_lab2.lab2.model.Address;
 import com.cmpe275_lab2.lab2.model.Player;
@@ -94,6 +91,20 @@ public class PlayerController {
 	
 	
 	return ResponseEntity.ok(player);
+		}
+	}
+
+
+	@DeleteMapping("/player/{id}")
+	public ResponseEntity<?> addPlayer(@PathVariable(value = "id") Long id) {
+		Optional<Player> playersList = playerRepository.findById(id);
+
+		if(playersList==null){
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		else {
+			playerRepository.delete(id);
+			return ResponseEntity.ok().build();
 		}
 	}
 }

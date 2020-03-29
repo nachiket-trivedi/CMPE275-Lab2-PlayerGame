@@ -62,7 +62,7 @@ public class OpponentController {
 		return ResponseEntity.ok().body(new ObjectMapper().createObjectNode().put("msg", "Collaboration added"));
 	}
 
-	@DeleteMapping("/opponent/{id1}/{id2}")
+	@DeleteMapping("/opponents/{id1}/{id2}")
 	public ResponseEntity<?> deleteSponsor(@PathVariable(value = "id1") Long id1, @PathVariable(value = "id2") Long id2) {
 //		List<Sponsor> ex_sponsors = sponsorRepository.findByName(name.trim());
 //

@@ -49,7 +49,7 @@ public class Player {
 	    @JoinTable(name="opponent",
 		joinColumns={@JoinColumn(name="Player", referencedColumnName="PL_ID")},
 		inverseJoinColumns={@JoinColumn(name="Opponent", referencedColumnName="PL_ID")})
-	    @JsonIgnoreProperties( value = {"address","sponsor","opponents"})
+	    @JsonIgnoreProperties( value = {"sponsor","opponents"})
 	    private List<Player> opponents;
 	    
 	    public Player() {

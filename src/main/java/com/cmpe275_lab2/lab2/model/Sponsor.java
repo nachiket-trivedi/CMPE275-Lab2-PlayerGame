@@ -32,7 +32,7 @@ public class Sponsor {
 		private String description;
 		@Embedded
 	    private Address address;
-		@OneToMany(fetch = FetchType.EAGER,mappedBy = "sponsor")
+		@OneToMany(fetch = FetchType.LAZY,mappedBy = "sponsor",cascade = CascadeType.ALL,orphanRemoval= true)
 		@JsonIgnoreProperties({"sponsor"})
 		private List<Player> beneficiaries;
 		

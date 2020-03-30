@@ -95,8 +95,7 @@ public class SponsorController {
 		if (ex_sponsors.size() == 0) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		} else {
-
-			sponsorRepository.delete(ex_sponsors.get(0));
+			sponsorServiceImpl.deleteSponsor(ex_sponsors.get(0).getId());
 			return ResponseEntity.ok().build();
 		}
 	}

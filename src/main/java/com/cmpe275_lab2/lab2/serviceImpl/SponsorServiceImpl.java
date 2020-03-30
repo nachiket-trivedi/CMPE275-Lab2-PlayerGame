@@ -39,4 +39,9 @@ public class SponsorServiceImpl implements SponsorService {
         }
         return false;
     }
+    public void deleteSponsor(Long id) {
+        sponsorRepository.deleteById(id);
+    }
+
+
 }

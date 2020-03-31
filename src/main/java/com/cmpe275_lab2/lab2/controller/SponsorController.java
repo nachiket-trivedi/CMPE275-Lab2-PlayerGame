@@ -68,25 +68,26 @@ public class SponsorController {
 		return ResponseEntity.ok(sponsor);
 		}
 	}
-	
-	@RequestMapping(value = "/sponsor/{name}", produces = { "application/json", "application/xml"})
+
+	@GetMapping(value = "/sponsor/{name}", produces = { "application/json", "application/xml"})
 	public ResponseEntity<Object> getSponsor(@PathVariable String name){
-			
+
 			Optional<Sponsor> sponsor = sponsorServiceImpl.getSponsor(name);
-			
+
 			if(sponsor.isPresent()) {
-				
+
 				return ResponseEntity.ok(sponsor);
 			}
 			else {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-			}			
-		
+			}
+
 	}
 
 
 	@DeleteMapping("/sponsor/{name}")
-	public ResponseEntity<?> deleteSponsor(@PathVariable(value = "name") String name) {
+	public ResponseEntity<Object> deleteSponsor(@PathVariable(value = "name") String name) {
+		System.out.println("----->");
 		List<Sponsor> ex_sponsors = sponsorRepository.findByName(name.trim());
 
 		if (name.equals("") || name.equals(null)) {
@@ -95,6 +96,7 @@ public class SponsorController {
 		if (ex_sponsors.size() == 0) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		} else {
+			System.out.println("-----######");
 			sponsorServiceImpl.deleteSponsor(ex_sponsors.get(0).getId());
 			return ResponseEntity.ok().build();
 		}
@@ -109,6 +111,7 @@ public class SponsorController {
 			, @RequestParam(required = false) String state
 			, @RequestParam(required = false) String zip
 	) {
+		System.out.println("---inside update sponsor---");
 		if(name==null || name.equals(""))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		Sponsor sponsor = new Sponsor();

@@ -40,6 +40,7 @@ public class SponsorServiceImpl implements SponsorService {
         return false;
     }
     public void deleteSponsor(Long id) {
+        System.out.println("----->"+id);
         sponsorRepository.deleteById(id);
     }
 

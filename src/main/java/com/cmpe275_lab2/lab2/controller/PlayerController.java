@@ -98,22 +98,21 @@ public class PlayerController {
 	return ResponseEntity.ok(player);
 		}
 	}
-	
-	@RequestMapping(value = "/player/{id}", produces = { "application/json", "application/xml"})
+
+	@GetMapping(value = "/player/{id}", produces = { "application/json", "application/xml"})
 	public ResponseEntity<Object> getPlayer(@PathVariable Long id){
-		
-			
+
+
 			Optional<Player> player = playerServiceImpl.getPlayer(id);
-		
+
 			if(player.isPresent()) {
-				
+
 				return ResponseEntity.ok(player);
 			}
 			else {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-			}			
+			}
 	}
-
 
 	@DeleteMapping("/player/{id}")
 	public ResponseEntity<?> deletePlayer(@PathVariable(value = "id") Long id) {

@@ -63,19 +63,26 @@ public class OpponentController {
 	}
 
 	@DeleteMapping("/opponents/{id1}/{id2}")
-	public ResponseEntity<?> deleteSponsor(@PathVariable(value = "id1") Long id1, @PathVariable(value = "id2") Long id2) {
-//		List<Sponsor> ex_sponsors = sponsorRepository.findByName(name.trim());
-//
-//		if(name.equals("") || name.equals(null)){
-//			return new ResponseEntity(HttpStatus.BAD_REQUEST);
-//		}
-//		if(ex_sponsors.size() == 0){
-//			return new ResponseEntity(HttpStatus.NOT_FOUND);
-//		}
-//		else {
-//			sponsorRepository.delete(name);
+	public ResponseEntity<?> deleteOpponent(@PathVariable(value = "id1") Long id1, @PathVariable(value = "id2") Long id2) {
+
+		Optional<Player> player1 = playerRepository.findById(id1);
+		Optional<Player> player2 = playerRepository.findById(id2);
+		List<Player> opponent1= player1.get().getOpponents();
+		List<Player> opponent2= player2.get().getOpponents();
+
+		if(id1==id2) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		else if (!player1.isPresent() || !player2.isPresent()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		else if(!opponent1.contains(player2) ||!opponent2.contains(player1) ){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}else{
+			playerRepository.deleteOpponent(player1.get().getId(),player2.get().getId());
 			return ResponseEntity.ok().build();
-		//}
+		}
+
 	}
 
 }

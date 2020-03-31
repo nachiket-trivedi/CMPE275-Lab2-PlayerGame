@@ -87,7 +87,7 @@ public class SponsorController {
 
 	@DeleteMapping("/sponsor/{name}")
 	public ResponseEntity<Object> deleteSponsor(@PathVariable(value = "name") String name) {
-		System.out.println("----->");
+		//System.out.println("----->");
 		List<Sponsor> ex_sponsors = sponsorRepository.findByName(name.trim());
 
 		if (name.equals("") || name.equals(null)) {
@@ -96,7 +96,7 @@ public class SponsorController {
 		if (ex_sponsors.size() == 0) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		} else {
-			System.out.println("-----######");
+			//System.out.println("-----######");
 			sponsorServiceImpl.deleteSponsor(ex_sponsors.get(0).getId());
 			return ResponseEntity.ok().build();
 		}

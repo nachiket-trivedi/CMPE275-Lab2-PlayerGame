@@ -4,16 +4,20 @@ import com.cmpe275_lab2.lab2.model.Player;
 import com.cmpe275_lab2.lab2.repository.PlayerRepository;
 import com.cmpe275_lab2.lab2.service.PlayerService;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PlayerServiceImpl implements PlayerService {
+public abstract class PlayerServiceImpl implements PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
-    
+
     public void addPlayer(Player player) {
     	playerRepository.save(player);
 	}
@@ -29,7 +33,6 @@ public class PlayerServiceImpl implements PlayerService {
     public void addOpponents(Player player1, Player player2) {
     	playerRepository.save(player1);
     	playerRepository.save(player2);
-		
 	}
 
 	public boolean updatePlayer(Player player, long id)
@@ -54,4 +57,6 @@ public class PlayerServiceImpl implements PlayerService {
 	public void deletePlayer(Long id) {
 		playerRepository.deleteById(id);
 	}
+
+
 }

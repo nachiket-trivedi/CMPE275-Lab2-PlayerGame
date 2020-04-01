@@ -57,19 +57,20 @@ public class OpponentController {
 			}
 			
 		}
-		return ResponseEntity.ok().body(new ObjectMapper().createObjectNode().put("msg", "Collaboration added"));
+		return ResponseEntity.ok().body(new ObjectMapper().createObjectNode().put("msg", "Opponent added"));
 	}
 
 	@DeleteMapping("/opponents/{id1}/{id2}")
 	public ResponseEntity<?> deleteOpponent(@PathVariable(value = "id1") Long id1, @PathVariable(value = "id2") Long id2) {
 		try {
 
-
 			Optional<Player> player1 = playerRepository.findById(id1);
 			Optional<Player> player2 = playerRepository.findById(id2);
 			Player p1=player1.get();
 			Player p2=player2.get();
 
+			if(id1==id2)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 			if(p1 == null || p2 == null)
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			if(!p1.getOpponents().contains(p2) || !p2.getOpponents().contains(p1))
@@ -87,26 +88,6 @@ public class OpponentController {
 			}
 		}
 		return ResponseEntity.ok().body(new ObjectMapper().createObjectNode().put("msg", "Opponent removed"));
-
-
-
-//		Optional<Player> player1 = playerRepository.findById(id1);
-//		Optional<Player> player2 = playerRepository.findById(id2);
-//		List<Player> opponent1= player1.get().getOpponents();
-//		List<Player> opponent2= player2.get().getOpponents();
-//
-//		if(id1==id2) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//		}
-//		else if (!player1.isPresent() || !player2.isPresent()) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//		}
-//		else if(!opponent1.contains(player2) ||!opponent2.contains(player1) ){
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//		}else{
-//			playerRepository.deleteOpponent(player1.get().getId(),player2.get().getId());
-//			return ResponseEntity.ok().build();
-//		}
 
 	}
 

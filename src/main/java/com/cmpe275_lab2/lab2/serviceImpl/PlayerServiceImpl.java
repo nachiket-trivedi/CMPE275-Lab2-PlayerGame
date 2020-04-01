@@ -3,18 +3,13 @@ package com.cmpe275_lab2.lab2.serviceImpl;
 import com.cmpe275_lab2.lab2.model.Player;
 import com.cmpe275_lab2.lab2.repository.PlayerRepository;
 import com.cmpe275_lab2.lab2.service.PlayerService;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public abstract class PlayerServiceImpl implements PlayerService {
+public class PlayerServiceImpl implements PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
 

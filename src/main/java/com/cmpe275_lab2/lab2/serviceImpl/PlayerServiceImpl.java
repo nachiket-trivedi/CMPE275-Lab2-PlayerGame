@@ -6,6 +6,7 @@ import com.cmpe275_lab2.lab2.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
 import java.util.Optional;
 
 @Service
@@ -48,10 +49,14 @@ public class PlayerServiceImpl implements PlayerService {
 	return false;
 	}
 
+	public List<Player> getAllPlayers() {
+		List<Player> playerList = new ArrayList<Player>();
+		playerRepository.findAll().forEach(playerList::add);
+		return playerList;
+	}
 
 	public void deletePlayer(Long id) {
 		playerRepository.deleteById(id);
 	}
-
 
 }

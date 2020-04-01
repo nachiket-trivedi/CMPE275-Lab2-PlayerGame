@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.cmpe275_lab2.lab2.model.Player;
+import com.cmpe275_lab2.lab2.serviceImpl.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,9 @@ import com.cmpe275_lab2.lab2.serviceImpl.SponsorServiceImpl;
 @RestController
 public class SponsorController {
 	
-	
+	@Autowired
+	private PlayerServiceImpl playerServiceImpl;
+
 	@Autowired
 	private SponsorServiceImpl sponsorServiceImpl;
 	
@@ -96,7 +99,22 @@ public class SponsorController {
 		if (ex_sponsors.size() == 0) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		} else {
-			//System.out.println("-----######");
+			List<Player> list = playerServiceImpl.getAllPlayers();
+			System.out.println(list);
+			boolean found = false;
+			for(Player p: list) {
+				if((ex_sponsors.get(0) != null) && p.getSponsor()!=null){
+					if(p.getSponsor().getId() == ex_sponsors.get(0).getId()) {
+						found = true;
+						break;
+					}
+				}
+
+			}
+
+			if(found)
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
 			sponsorServiceImpl.deleteSponsor(ex_sponsors.get(0).getId());
 			return ResponseEntity.ok().build();
 		}

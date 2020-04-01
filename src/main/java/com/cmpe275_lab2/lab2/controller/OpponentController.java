@@ -20,12 +20,12 @@ public class OpponentController {
 	private PlayerServiceImpl playerServiceImpl;
 	@Autowired
 	private PlayerRepository playerRepository;
-	
+
 	@Transactional
-	@RequestMapping(method=RequestMethod.PUT, value="/opponents/{id1}/{id2}", produces = { "application/json", "application/xml" })
+	@RequestMapping(method=RequestMethod.POST, value="/opponents/{id1}/{id2}", produces = { "application/json", "application/xml" })
 	public ResponseEntity<Object> addOpponent(@PathVariable Long id1, @PathVariable Long id2)
             {
-		
+
 		try {
 			Optional<Player> player1 = playerServiceImpl.getPlayer(id1);
 			Optional<Player> player2 = playerServiceImpl.getPlayer(id2);
@@ -42,11 +42,11 @@ public class OpponentController {
 					p2.setOpponents(p1);
 					playerServiceImpl.addOpponents(p1, p2);
 				}
-				
+
 			}
 			else {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-			}	
+			}
 		}
 		catch(Exception e) {
 			if (e.getClass().equals(new org.springframework.dao.EmptyResultDataAccessException(0).getClass())) {
@@ -55,7 +55,7 @@ public class OpponentController {
 			if (e.getClass().equals(new org.springframework.dao.DataIntegrityViolationException(null).getClass())) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 			}
-			
+
 		}
 		return ResponseEntity.ok().body(new ObjectMapper().createObjectNode().put("msg", "Opponent added"));
 	}

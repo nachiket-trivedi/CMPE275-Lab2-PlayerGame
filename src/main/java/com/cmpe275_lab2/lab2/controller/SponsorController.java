@@ -122,7 +122,7 @@ public class SponsorController {
 
 	@PutMapping(value="/sponsor/{name}", produces = { "application/json", "application/xml" })
 	ResponseEntity<Object> updateSponsor(@PathVariable(name = "name") String pathname
-			, @RequestParam String name
+			, @RequestParam(required = false) String name
 			, @RequestParam(required = false) String description
 			, @RequestParam(required = false) String street
 			, @RequestParam(required = false) String city
@@ -131,8 +131,6 @@ public class SponsorController {
 			, @RequestParam(required = false) String beneficiaries
 	) {
 		System.out.println("---inside update sponsor---");
-		if(name==null || name.equals(""))
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		if(beneficiaries!=null)
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Beneficiaries are not supposed to be passed as parameters");
 		Sponsor sponsor = new Sponsor();

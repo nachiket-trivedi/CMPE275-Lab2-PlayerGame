@@ -49,7 +49,7 @@ public class PlayerController {
             , @RequestParam(required = false) String zip
             , @RequestParam(required = false) Long sponsor_id
             ) {
-		
+		System.out.println("post");
 		//String new_description=description.trim();
 		List<Player> ex_player = playerRepository.findByEmail(email.trim());
 		if(ex_player.size() > 0){
@@ -102,7 +102,7 @@ public class PlayerController {
 	@GetMapping(value = "/player/{id}", produces = { "application/json", "application/xml"})
 	public ResponseEntity<Object> getPlayer(@PathVariable Long id){
 
-
+		System.out.println("get");
 			Optional<Player> player = playerServiceImpl.getPlayer(id);
 
 			if(player.isPresent()) {
@@ -116,6 +116,7 @@ public class PlayerController {
 
 	@DeleteMapping("/player/{id}")
 	public ResponseEntity<?> deletePlayer(@PathVariable(value = "id") Long id) {
+		System.out.println("delete");
 		Optional<Player> playersList = playerRepository.findById(id);
 
 		if (playersList.isPresent()) {
@@ -126,9 +127,9 @@ public class PlayerController {
 		}
 	}
 
-	@PutMapping(value="/player/{id}")
-	ResponseEntity<Object> updatePlayer(@PathVariable(name = "id") long id,@RequestParam String firstname
-			, @RequestParam String lastname
+	@PutMapping(value="/player/{id}", produces = { "application/json", "application/xml" })
+	ResponseEntity<Object> updatePlayer(@PathVariable(name = "id") long id,@RequestParam(required = false) String firstname
+			, @RequestParam(required = false) String lastname
 			, @RequestParam String email
 			, @RequestParam(required = false) String description
 			, @RequestParam(required = false) String street
@@ -136,43 +137,92 @@ public class PlayerController {
 			, @RequestParam(required = false) String state
 			, @RequestParam(required = false) String zip
 			, @RequestParam(required = false) Long sponsor_id
+			, @RequestParam(required = false) String opponents
 	) {
+		System.out.println("---------------put");
 		if(email==null || email.equals(""))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		Player player = new Player();
-		player.setFirstname(firstname.trim());
-		player.setLastname(lastname.trim());
+		if(opponents!=null)
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Opponents are not supposed to be passed as parameters");
+		Optional<Player> player_old = playerServiceImpl.getPlayer(id);
+		if(!player_old.isPresent()){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		List<Player> ex_player = playerRepository.findByEmail(email.trim());
+		if(ex_player.size() >0 && id!=ex_player.get(0).getId()){
+			return new ResponseEntity(HttpStatus.CONFLICT);
+		}
+		if(firstname!=null) {
+			player.setFirstname(firstname.trim());
+		}
+		else {
+			player.setFirstname(player_old.get().getFirstname());
+		}
+		if(lastname!=null) {
+			player.setLastname(lastname.trim());
+		}
+		else {
+			player.setLastname(player_old.get().getLastname());
+		}
 		player.setEmail(email.trim());
 		if(description!=null) {
 			String new_description=description.trim();
 			player.setDescription(new_description);
 		}
-		Address add=new Address();
+		else {
+			player.setDescription(player_old.get().getDescription());
+		}
+		Address address=new Address();
+		Address address_old = new Address();
+		address_old = player_old.get().getAddress();
+		if(address_old==null){
+			address_old = new Address();
+			address_old.setStreet(null);
+			address_old.setCity(null);
+			address_old.setState(null);
+			address_old.setZip(null);
+		}
 		if(street!=null) {
-			add.setStreet(street.trim());
+			address.setStreet(street.trim());
+		}
+		else {
+			address.setStreet(address_old.getStreet());
 		}
 		if(city!=null) {
-			add.setCity(city.trim());
+			address.setCity(city.trim());
+		}
+		else {
+			address.setCity(address_old.getCity());
 		}
 		if(state!=null) {
-			add.setState(state.trim());
+			address.setState(state.trim());
+		}
+		else {
+			address.setState(address_old.getState());
 		}
 		if(zip!=null) {
-			add.setZip(zip.trim());
+			address.setZip(zip.trim());
 		}
-		player.setAddress(add);
+		else {
+			address.setZip(address_old.getZip());
+		}
+		player.setAddress(address);
 		if(sponsor_id!=null) {
 			Optional<Sponsor> tempSponsor = sponsorServiceImpl.getSponsor(sponsor_id);
 			if (tempSponsor.isPresent()) {
 				Sponsor s = tempSponsor.get();
 				player.setSponsor(s);
 			} else{
-				player.setSponsor(null);
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sponsor Id doesn't exist");
 			}
+		}
+		else{
+			player.setSponsor(null);
 		}
 		boolean response=playerServiceImpl.updatePlayer(player, id);
 		if(response)
-			return ResponseEntity.ok(player);
+			return ResponseEntity.ok(playerServiceImpl.getPlayer(id));
 		else
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 

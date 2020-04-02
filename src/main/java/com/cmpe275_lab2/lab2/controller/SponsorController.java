@@ -120,7 +120,7 @@ public class SponsorController {
 		}
 	}
 
-	@PutMapping(value="/sponsor/{name}")
+	@PutMapping(value="/sponsor/{name}", produces = { "application/json", "application/xml" })
 	ResponseEntity<Object> updateSponsor(@PathVariable(name = "name") String pathname
 			, @RequestParam String name
 			, @RequestParam(required = false) String description
@@ -128,32 +128,62 @@ public class SponsorController {
 			, @RequestParam(required = false) String city
 			, @RequestParam(required = false) String state
 			, @RequestParam(required = false) String zip
+			, @RequestParam(required = false) String beneficiaries
 	) {
 		System.out.println("---inside update sponsor---");
 		if(name==null || name.equals(""))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		if(beneficiaries!=null)
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Beneficiaries are not supposed to be passed as parameters");
 		Sponsor sponsor = new Sponsor();
-		sponsor.setName(name.trim());
-		if(description!=null) {
-			sponsor.setDescription(description.trim());
+		Optional<Sponsor> sponsor_old = sponsorServiceImpl.getSponsor(pathname);
+		if(!sponsor_old.isPresent()){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
-		Address address=new Address();
-		if(street!=null) {
-			address.setStreet(street.trim());
+		List<Sponsor> ex_sponsors = sponsorRepository.findByName(name.trim());
+		if(ex_sponsors.size() ==1 && !name.equals(pathname)){
+			return new ResponseEntity(HttpStatus.CONFLICT);
 		}
-		if(city!=null) {
-			address.setCity(city.trim());
-		}
-		if(state!=null) {
-			address.setState(state.trim());
-		}
-		if(zip!=null) {
-			address.setZip(zip.trim());
-		}
-		sponsor.setAddress(address);
+			sponsor.setName(name.trim());
+			if (description != null) {
+				sponsor.setDescription(description.trim());
+			} else {
+				sponsor.setDescription(sponsor_old.get().getDescription());
+			}
+			Address address = new Address();
+			Address address_old = new Address();
+			address_old = sponsor_old.get().getAddress();
+			if(address_old==null){
+				address_old = new Address();
+				address_old.setStreet(null);
+				address_old.setCity(null);
+				address_old.setState(null);
+				address_old.setZip(null);
+			}
+			if (street != null) {
+				address.setStreet(street.trim());
+			} else {
+				address.setStreet(address_old.getStreet());
+			}
+			if (city != null) {
+				address.setCity(city.trim());
+			} else {
+				address.setCity(address_old.getCity());
+			}
+			if (state != null) {
+				address.setState(state.trim());
+			} else {
+				address.setState(address_old.getState());
+			}
+			if (zip != null) {
+				address.setZip(zip.trim());
+			} else {
+				address.setZip(address_old.getZip());
+			}
+			sponsor.setAddress(address);
 		boolean response=sponsorServiceImpl.updateSponsor(sponsor, pathname);
 		if(response)
-			return ResponseEntity.ok(sponsor);
+			return ResponseEntity.ok(sponsorServiceImpl.getSponsor(name));
 		else
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}

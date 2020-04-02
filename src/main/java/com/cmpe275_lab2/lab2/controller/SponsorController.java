@@ -135,14 +135,20 @@ public class SponsorController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Beneficiaries are not supposed to be passed as parameters");
 		Sponsor sponsor = new Sponsor();
 		Optional<Sponsor> sponsor_old = sponsorServiceImpl.getSponsor(pathname);
+		String finName=pathname;
 		if(!sponsor_old.isPresent()){
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
-		List<Sponsor> ex_sponsors = sponsorRepository.findByName(name.trim());
-		if(ex_sponsors.size() ==1 && !name.equals(pathname)){
-			return new ResponseEntity(HttpStatus.CONFLICT);
-		}
+		if(name!=null){
+			List<Sponsor> ex_sponsors = sponsorRepository.findByName(name.trim());
+			if(ex_sponsors.size() ==1 && !name.equals(pathname))
+				return new ResponseEntity(HttpStatus.CONFLICT);
 			sponsor.setName(name.trim());
+			finName=name;
+		}
+		else{
+			sponsor.setName(sponsor_old.get().getName());
+		}
 			if (description != null) {
 				sponsor.setDescription(description.trim());
 			} else {
@@ -181,7 +187,7 @@ public class SponsorController {
 			sponsor.setAddress(address);
 		boolean response=sponsorServiceImpl.updateSponsor(sponsor, pathname);
 		if(response)
-			return ResponseEntity.ok(sponsorServiceImpl.getSponsor(name));
+			return ResponseEntity.ok(sponsorServiceImpl.getSponsor(finName));
 		else
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
